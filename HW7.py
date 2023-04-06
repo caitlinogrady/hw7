@@ -1,7 +1,7 @@
 
-# Your name:
-# Your student id:
-# Your email:
+# Your name: Caitlin O'Grady
+# Your student id: 6885 0080
+# Your email: ceogrady@umich.edu
 # List who you have worked with on this project:
 
 import unittest
@@ -52,8 +52,9 @@ def make_positions_table(data, cur, conn):
 #     the position in the Positions table we 
 #     created for you -- see make_positions_table above for details.
 
+
 def make_players_table(data, cur, conn):
-    pass
+    
 
 ## [TASK 2]: 10 points
 # Finish the function nationality_search
@@ -64,7 +65,19 @@ def make_players_table(data, cur, conn):
     # It selects all the players from any of the countries in the list
     # and returns a list of tuples. Each tuple contains:
         # the player's name, their position_id, and their nationality.
-
+    plist = data['squad']
+    cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
+    for p in plist:
+        birth = p['dateOfBirth']
+        b = birth.split("-")
+        byear = int(b[2])
+        cur.execute('SELECT id FROM Positions WHERE position = ? LIMIT 1', (p['position'], ))
+		
+        pid = cur.fetchone()[0]
+        conn.commit
+        cur.execute('INSERT OR IGNORE INTO Players (id,name,position_id,birthyear,nationality) VALUES (?,?,?,?,?)',(p['id'],p['name'],pid,byear,p['nationality']))
+        conn.commit
+        
 def nationality_search(countries, cur, conn):
     pass
 
